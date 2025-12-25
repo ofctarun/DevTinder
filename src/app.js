@@ -1,5 +1,7 @@
 import express from "express";
-import auth from "./middleware/auth.js"
+import { connectDB } from "./config/database.js";
+import User from "./models/user.js";
+// import auth from "./middleware/auth.js"
 
 // const { MongoClient } = require('mongodb');
 // const uri = 'mongodb+srv://ofc_tarun:12345@namastenode.7fvpwio.mongodb.net/';
@@ -56,25 +58,44 @@ const app = express();
 // })
 
 
-app.get("/getUsersData" , (req, res) => {
+// app.get("/getUsersData" , (req, res) => {
+//     try{
+//         throw new Error("RakthaPinjiri Roiiii");
+//         res.send("Users Data sent!!");
+//     }
+//     catch(err){
+//         res.status(501).send("err resolved in starting.")
+//     }
+// })
+
+
+// app.use("/",(err, req, res, next)=>{
+//     if(err)res.send("Please contact the support team!!");
+// })
+
+app.post("/signup",async (req, res) => {
+    const userObj = {
+        firstName : "arun",
+        lastName : "Narayanashetti",
+        age : "18"
+    }
+    const user = new User(userObj);
     try{
-        throw new Error("RakthaPinjiri Roiiii");
-        res.send("Users Data sent!!");
+        await user.save();
+        res.send("user added successfully!!!");
     }
     catch(err){
-        res.status(501).send("err resolved in starting.")
+        res.status(400).send(err);
     }
 })
 
 
-app.use("/",(err, req, res, next)=>{
-    if(err)res.send("Please contact the support team!!");
+connectDB().then(() => {
+    console.log("DataBase connection Established.");
+    app.listen(1818, () => {
+        console.log("Running on Port 1818.");
+    })
 })
-
-
-
-
-
-app.listen(1818, () => {
-    console.log("Running on Port 1818.");
+.catch((err) => {
+    console.log("DataBase Establishment error!!!");
 })

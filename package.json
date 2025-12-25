@@ -25,6 +25,7 @@
   "homepage": "https://github.com/ofctarun/DevTinder#readme",
   "dependencies": {
     "express": "^5.2.1",
+    "mongoose": "^9.0.2",
     "nodemon": "^3.1.11",
     "xlsx": "^0.18.5"
   }
