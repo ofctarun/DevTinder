@@ -73,16 +73,21 @@ const app = express();
 //     if(err)res.send("Please contact the support team!!");
 // })
 
+app.use(express.json());
+
+
 app.post("/signup",async (req, res) => {
-    const userObj = {
-        firstName : "arun",
-        lastName : "Narayanashetti",
-        age : "18"
-    }
-    const user = new User(userObj);
+    // const userObj = {
+    //     firstName : "arun",
+    //     lastName : "Narayanashetti",
+    //     age : "18"
+    // }
+    // const user = new User(userObj);
+    // const user = new User(req.body);
     try{
-        await user.save();
-        res.send("user added successfully!!!");
+        const result =  await User.findOne(req.body);
+        res.send(result);
+        // console.log("Added user");
     }
     catch(err){
         res.status(400).send(err);
