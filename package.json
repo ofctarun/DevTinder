@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A Tinder application for developers",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/app.js",
@@ -24,6 +25,7 @@
   "homepage": "https://github.com/ofctarun/DevTinder#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "xlsx": "^0.18.5"
   }
 }
