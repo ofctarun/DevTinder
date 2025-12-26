@@ -6,7 +6,7 @@ import User from "./models/user.js";
 // const { MongoClient } = require('mongodb');
 // const uri = 'mongodb+srv://ofc_tarun:12345@namastenode.7fvpwio.mongodb.net/';
 // const client = new MongoClient(uri);
-         
+
 const app = express();
 
 // const getData = async () => {
@@ -76,24 +76,72 @@ const app = express();
 app.use(express.json());
 
 
-app.post("/signup",async (req, res) => {
-    // const userObj = {
-    //     firstName : "arun",
-    //     lastName : "Narayanashetti",
-    //     age : "18"
-    // }
-    // const user = new User(userObj);
-    // const user = new User(req.body);
-    try{
-        const result =  await User.findOne(req.body);
-        res.send(result);
-        // console.log("Added user");
+// app.post("/signup",async (req, res) => {
+//     // const userObj = {
+//     //     firstName : "arun",
+//     //     lastName : "Narayanashetti",
+//     //     age : "18"
+//     // }
+//     // const user = new User(userObj);
+//     // const user = new User(req.body);
+//     try{
+//         const result =  await User.findOne(req.body);
+//         res.send(result);
+//         // console.log("Added user");
+//     }
+//     catch(err){
+//         res.status(400).send(err);
+//     }
+// })
+
+
+app.post("/signup", async (req, res) => {
+    try {
+        const user = new User(req.body);
+        await user.save();
+        res.status(201).send(user);
+    } catch (err) {
+        res.status(400).send("Error is : " + err);
     }
-    catch(err){
-        res.status(400).send(err);
+});
+
+
+app.put("/signup/:id", async (req, res) => {
+    try {
+        await User.findOneAndReplace({ _id: req.params.id }, req.body, { runValidators: true });
+        if (!user) return res.status(404).send("User not found");
+        res.status(200).send("PUT DONE!!")
+    }
+    catch (err) {
+        res.status(400).send("Error is" + err);
     }
 })
 
+app.patch("/user", async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const data = req.body;
+        const ALLOWED_ITEMS = ["userId", "firstname", "age", "gender"];
+        const isUpdateAllowed = Object.keys(data).every((k) => ALLOWED_ITEMS.includes(k));
+        if (!isUpdateAllowed) res.status(400).send("Update not allowed!");
+
+        const user = await User.findByIdAndUpdate(userId, req.body, { runValidators: true });
+        res.status(200).send("Updated Successfully")
+    }
+    catch (err) {
+        res.status(400).send("here isa error :" + err);
+    }
+})
+
+app.delete("/signup/:id", async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.status(200).send("Deleted Succesfully");
+    }
+    catch (err) {
+        res.status(400).send("Here is the Error" + err);
+    }
+})
 
 connectDB().then(() => {
     console.log("DataBase connection Established.");
@@ -101,6 +149,6 @@ connectDB().then(() => {
         console.log("Running on Port 1818.");
     })
 })
-.catch((err) => {
-    console.log("DataBase Establishment error!!!");
-})
+    .catch((err) => {
+        console.log("DataBase Establishment error!!!");
+    })
