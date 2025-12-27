@@ -3,10 +3,12 @@ import { connectDB } from "./config/database.js";
 import isValid from "./utils/validation.js";
 import bcrypt from "bcrypt";
 import User from "./models/user.js";
+import cookieParser from "cookie-parser";
+import auth from "./middleware/auth.js"
 
 const app = express();
 app.use(express.json());
-
+app.use(cookieParser());
 
 app.post("/createUser" , async (req, res) => {
     try{
@@ -22,7 +24,7 @@ app.post("/createUser" , async (req, res) => {
             password : hashedPassword
         });
 
-        user.save();
+        await user.save();
 
         res.status(200).send("Created User Successfully!!!");
     }
@@ -43,14 +45,32 @@ app.post("/checkUser" , async (req, res) => {
 
         if(!dbUser)throw new Error("User not found with this email!!");
 
-        const isValidUser = await bcrypt.compare(password, dbUser.password);
+        const isValidUser = await dbUser.validatePassword(password);
 
-        isValidUser ? res.send("User found!!") : res.send("Invalid Credentials!!");
+        if(isValidUser) {
+            //JWT token 
+            const token = await dbUser.getJWT();
+            // console.log(token);
+
+            //create a cookie with jwt
+            res.cookie("token",token,{
+                expires : new Date(Date.now() + 8 * 3600000)
+            });
+            res.send("User found!!");
+        }
+        else {
+            res.send("Invalid Credentials!!");
+        }
         
     }
     catch(err){
         res.status(400).send("Error is : " + err);
     }
+})
+
+
+app.get("/profile" ,auth, async (req, res) => {
+    res.send(req.user);
 })
 
 
