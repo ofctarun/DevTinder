@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 import validator from "validator";
 const userSchema = new mongoose.Schema({
-    firstname:{
+    firstName:{
         type : String,
         required : true,
         trim : true,
-        minLength : 2,
+        minLength : 4,
         maxLength : 20
     },
     lastName : {
@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
             message : "Not a valid mail"
         }
     },
+    password : {
+        type : String,
+        required : true,
+    },
     age : {
         type : Number,
         min : 1,
@@ -35,7 +39,6 @@ const userSchema = new mongoose.Schema({
         type : String,
         enum : ["male","female","other"],
         lowercase : true,
-        required : true,
         validate : {
             validator : function(value){
                 return ["male","female","other"].includes(value);
