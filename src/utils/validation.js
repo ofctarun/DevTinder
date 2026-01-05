@@ -13,4 +13,10 @@ const isValid = (req, res) => {
     }
 }
 
-export default isValid;
+const validateEditProfileData = (req) => {
+    const allowedEditFields = ["firstName", "lastName", "gender" , "age", "createdBy"];
+    const isEditAllowed = Object.keys(req.body).every(field => allowedEditFields.includes(field));
+    return isEditAllowed;
+}
+
+export  {isValid, validateEditProfileData };
