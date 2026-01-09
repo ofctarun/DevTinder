@@ -31,5 +31,29 @@ profileRouter.patch("/profile/edit",userAuth , async (req, res) => {
     }
 })
 
+profileRouter.post("/editPassword" ,userAuth , async (req, res) => {
+    try{
+        const { currPassword, newPassword } = req.body;
+        const currUser = req.user;
+        
+        if(!currPassword || !newPassword){
+            throw new Error("Both currentPassword and newPassword are required");
+        }
+        
+        const isValidPassword = await currUser.validatePassword(currPassword);
+        if(!isValidPassword)throw new Error("Entered password is wrong");
+
+        const isSame = await currUser.validatePassword(newPassword);
+        if (isSame) throw new Error("New password must be different from current password");
+
+        currUser.password = newPassword;
+        await currUser.save();
+
+        res.status(200).send("Password Updated Successfully!!!");
+    }
+    catch(err){
+        res.status(400).send("Error : " + err);
+    }
+})
 
 export default profileRouter;
