@@ -11,12 +11,12 @@ authRouter.post("/signup", async (req, res) => {
 
         const { firstName, email, password } = req.body;
         //hash
-        const hashedPassword = await bcrypt.hash(password, 10);
+        //const hashedPassword = await bcrypt.hash(password, 10); --> USING PRE MIDDLE WARE!!
 
         const user = new User({
             firstName: firstName,
             email: email,
-            password: hashedPassword
+            password
         });
 
         await user.save();
