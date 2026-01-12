@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        index : true,
+        index: true,
         unique: true,
         lowercase: true,
         trim: true,
@@ -53,6 +53,17 @@ const userSchema = new mongoose.Schema({
     createdBy: {
         type: String,
         default: "System"
+    },
+    photoURL: {
+        type: String,
+        trim: true,
+        validate: {
+            validator: function (value) {
+                return validator.isURL(value);
+            },
+            message: "Invalid photo URL"
+        },
+        default: "https://www.gravatar.com/avatar/?d=mp"
     }
 },
     { timestamps: true });

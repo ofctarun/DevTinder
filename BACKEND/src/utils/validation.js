@@ -1,8 +1,8 @@
 import validator from "validator";
 
 const isValid = (req, res) => {
-    const {firstName , email , password} = req.body;
-    if(!firstName || !email || !password){
+    const { email , password} = req.body;
+    if(!email || !password){
         throw new Error("Enter required fields!!");
     }
     if(!validator.isEmail(email)){

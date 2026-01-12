@@ -9,14 +9,15 @@ authRouter.post("/signup", async (req, res) => {
     try {
         isValid(req);
 
-        const { firstName, email, password } = req.body;
+        const { firstName, email, password ,photoURL} = req.body;
         //hash
         //const hashedPassword = await bcrypt.hash(password, 10); --> USING PRE MIDDLE WARE!!
 
         const user = new User({
-            firstName: firstName,
-            email: email,
-            password
+            firstName,
+            email,
+            password,
+            photoURL
         });
 
         await user.save();
@@ -49,10 +50,10 @@ authRouter.post("/login", async (req, res) => {
             res.cookie("token", token, {
                 expires: new Date(Date.now() + 8 * 3600000)
             });
-            res.send("User found!!");
+            res.send(dbUser);
         }
         else {
-            res.send("Invalid Credentials!!");
+            res.status(401).send("Invalid Credentials!!");
         }
 
     }
