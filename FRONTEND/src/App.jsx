@@ -6,6 +6,7 @@ import Login from './Components/Login'
 import Profile from './Components/Profile'
 import Feed from './Components/Feed'
 import appStore from './utils/appStore';
+import EditProfile from './Components/EditProfile';
 
 function App() {
 
@@ -15,12 +16,20 @@ function App() {
       element: <Body />,
       children: [
         {
+          path: '/',
+          element: <Feed /> 
+        },
+        {
           path: '/login',
           element: <Login />
         },
         {
           path: '/profile',
           element: <Profile />,
+        },
+        {
+          path: '/edit-profile',
+          element : <EditProfile />
         },
         {
           path: '/feed',

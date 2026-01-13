@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
     lastName: {
         type: String,
         trim: true,
-        lowercase: true
+        lowercase: true,
+        default: ""
     },
     email: {
         type: String,
@@ -37,7 +38,8 @@ const userSchema = new mongoose.Schema({
     age: {
         type: Number,
         min: 1,
-        max: 120
+        max: 120,
+        default: 0
     },
     gender: {
         type: String,
@@ -48,7 +50,8 @@ const userSchema = new mongoose.Schema({
                 return ["male", "female", "other"].includes(value);
             },
             message: "Gender is invalid"
-        }
+        },
+        default: "male"
     },
     createdBy: {
         type: String,
@@ -64,7 +67,34 @@ const userSchema = new mongoose.Schema({
             message: "Invalid photo URL"
         },
         default: "https://www.gravatar.com/avatar/?d=mp"
+    },
+    bio: {
+        type: String,
+        trim: true,
+        minLength: 10,
+        maxLength: 300,
+        default: "",
+        validate: {
+            validator: function (value) {
+                return value.length === 0 || value.length >= 10;
+            },
+            message: "Bio must be at least 10 characters long"
+        },
+        default: "Default Bio provide by System!!"
+    },
+    skills: {
+        type: [String],
+        default: ["eating", "sleeping", "shit"],
+        lowercase: true,
+        trim: true,
+        validate: {
+            validator: function (value) {
+                return Array.isArray(value) && value.length <= 20;
+            },
+            message: "Skills array cannot exceed 20 items"
+        }
     }
+
 },
     { timestamps: true });
 

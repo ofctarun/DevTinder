@@ -5,7 +5,7 @@ import User from "../models/user.js";
 
 const userRouter = express.Router();
 
-const USER_SAFE_DATA = "firstName email";
+const USER_SAFE_DATA = "firstName lastName email bio age gender photoURL skills";
 
 userRouter.get("/user/requests/received" , userAuth , async(req ,res) => {
     try{
@@ -55,7 +55,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
         const loggedInUser = req.user;
 
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        let limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
         limit = limit > 10 ? 10 : limit;
 

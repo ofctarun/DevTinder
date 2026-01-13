@@ -13,6 +13,9 @@ const Login = () => {
     password: 'Ofctarun@123',
     agreed: false
   })
+  const [errorMessage, setErrorMessage] = useState("");
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,9 +37,10 @@ const Login = () => {
 
       dispatch(addUser(response.data));
 
-      navigate('/feed');
+      navigate('/');
     }
     catch (err) {
+      setErrorMessage(err?.response?.data || "Something Went Wrong!!");
       console.log("Error from submitting login data : " + err.message);
     }
   }
@@ -179,11 +183,14 @@ const Login = () => {
                     onChange={handleInputChange}
                   />
                   {isLogin && (
-                    <div className="mt-2 text-right">
-                      <a className="text-sm text-emerald-600 hover:text-emerald-700 font-medium cursor-pointer">
-                        Forgot password?
-                      </a>
-                    </div>
+                    <>
+                      <div className="mt-2 text-right">
+                        <a className="text-sm text-emerald-600 hover:text-emerald-700 font-medium cursor-pointer">
+                          Forgot password?
+                        </a>
+                      </div>
+                      <p className='text-red-500 text-center'>{errorMessage}</p>
+                    </>
                   )}
                 </div>
 

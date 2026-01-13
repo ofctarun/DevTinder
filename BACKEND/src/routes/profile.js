@@ -7,27 +7,28 @@ const profileRouter = express.Router();
 profileRouter.get("/profile/view" ,userAuth , (req, res) => {
     try{
         const user = req.user;
-        res.send(user);
+        res.status(200).send(user);
     }
     catch(err){
-        res.status(400).send("Error : " + err.message);
+        res.status(401).send("Error : " + err.message);
     }
 })
 
 profileRouter.patch("/profile/edit",userAuth , async (req, res) => {
     try{
-        if(!validateEditProfileData(req))throw new Error("Invalid edit request!!!");
+        if(!validateEditProfileData(req))throw new Error("Validation Failed bro!");
         const loggedInUser = req.user;
         
         // Object.keys(req.body).forEach((key) => loggedInUser[key] = req.body[key]);
         Object.assign(loggedInUser, req.body);
         await loggedInUser.save();
 
-        res.send("Profile Edited Successfullyy!!!!")
+        res.send(req.user)
 
     }
     catch(err){
-        res.status(400).send("Error : " + err.message);
+    console.error(err); // Look at your terminal/console where the server is running
+    res.status(400).json({ message: err.message, errors: err.errors });
     }
 })
 
