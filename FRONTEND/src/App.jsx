@@ -7,6 +7,8 @@ import Profile from './Components/Profile'
 import Feed from './Components/Feed'
 import appStore from './utils/appStore';
 import EditProfile from './Components/EditProfile';
+import Connections from './Components/Connections';
+import Requests from './Components/Requests';
 
 function App() {
 
@@ -17,7 +19,7 @@ function App() {
       children: [
         {
           path: '/',
-          element: <Feed /> 
+          element: <Feed />
         },
         {
           path: '/login',
@@ -34,6 +36,14 @@ function App() {
         {
           path: '/feed',
           element: <Feed />
+        },
+        {
+          path: '/connections',
+          element: <Connections />
+        },
+        {
+          path: '/requests',
+          element: <Requests />
         }
       ]
     }
