@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BASE_URL } from '../utils/constants';
 import { addFeed } from '../utils/feedSlice';
 import UserCard from './UserCard';
-import { Link } from 'react-router-dom';
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
@@ -30,7 +29,6 @@ const Feed = () => {
   return (
     feed && (<div className='flex justify-center my-10'>
       <UserCard user={feed[0]}/>
-      <Link to="/login">GO TO LOGIN</Link>
     </div>)
   )
 }
