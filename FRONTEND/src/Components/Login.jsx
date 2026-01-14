@@ -29,7 +29,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Clear previous errors
+    setErrorMessage("");
 
     // Basic validation for signup
     if (!isLogin && !formData.agreed) {
@@ -38,11 +38,8 @@ const Login = () => {
     }
 
     try {
-      // 1. Determine the endpoint based on isLogin state
       const endpoint = isLogin ? "/login" : "/signup";
 
-      // 2. Prepare the payload
-      // Note: Backend signup expects 'firstName', but your state uses 'name'
       const payload = isLogin
         ? { email: formData.email, password: formData.password }
         : {
@@ -57,20 +54,15 @@ const Login = () => {
         { withCredentials: true }
       );
 
-      // 3. Update Redux store with user data
-      // Your backend returns { message: "...", data: savedUser } for signup
       const userData = isLogin ? response.data : response.data.data;
       dispatch(addUser(userData));
-
-      // 4. Conditional Navigation
       if (isLogin) {
-        navigate("/"); // Navigate to Feed on Login
+        navigate("/");
       } else {
-        navigate("/profile"); // Navigate to Profile on Signup
+        navigate("/profile");
       }
 
     } catch (err) {
-      // Extract exact error message from backend
       const errorMsg = err?.response?.data?.message || err?.response?.data || "Something Went Wrong!!";
       setErrorMessage(errorMsg.replace("Error is : ", ""));
       console.error("Auth error:", err.message);
