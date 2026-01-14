@@ -58,3 +58,20 @@ Body
         - Copy code from dist(build files) to /var/www/html/
         - sudo scp -r dist/* /var/www/html/
         - Enable port :80 of your instance
+    - Backend
+        - updated DB password
+        - allowed ec2 instance public IP on mongodb server
+        - npm intsall pm2 -g
+        - pm2 start npm --name "devTinder-backend" -- start
+        - pm2 logs
+        - pm2 list, pm2 flush <name> , pm2 stop <name>, pm2 delete <name>
+        - config nginx - /etc/nginx/sites-available/default
+        - restart nginx - sudo systemctl restart nginx
+        - Modify the BASEURL in frontend project to "/api"
+
+
+
+# Ngxinx config: 
+
+        Frontend = http://54.66.56.123/
+        Backend = http://54.66.56.123:1818/
