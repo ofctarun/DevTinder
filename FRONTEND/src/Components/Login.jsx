@@ -28,22 +28,54 @@ const Login = () => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    setErrorMessage(""); // Clear previous errors
+
+    // Basic validation for signup
+    if (!isLogin && !formData.agreed) {
+      setErrorMessage("Please agree to the Terms of Service");
+      return;
+    }
+
     try {
-      const response = await axios.post(BASE_URL + "/login", {
-        email: formData.email,
-        password: formData.password
-      }, { withCredentials: true });
+      // 1. Determine the endpoint based on isLogin state
+      const endpoint = isLogin ? "/login" : "/signup";
 
-      dispatch(addUser(response.data));
+      // 2. Prepare the payload
+      // Note: Backend signup expects 'firstName', but your state uses 'name'
+      const payload = isLogin
+        ? { email: formData.email, password: formData.password }
+        : {
+          firstName: formData.name,
+          email: formData.email,
+          password: formData.password
+        };
 
-      navigate('/');
+      const response = await axios.post(
+        BASE_URL + endpoint,
+        payload,
+        { withCredentials: true }
+      );
+
+      // 3. Update Redux store with user data
+      // Your backend returns { message: "...", data: savedUser } for signup
+      const userData = isLogin ? response.data : response.data.data;
+      dispatch(addUser(userData));
+
+      // 4. Conditional Navigation
+      if (isLogin) {
+        navigate("/"); // Navigate to Feed on Login
+      } else {
+        navigate("/profile"); // Navigate to Profile on Signup
+      }
+
+    } catch (err) {
+      // Extract exact error message from backend
+      const errorMsg = err?.response?.data?.message || err?.response?.data || "Something Went Wrong!!";
+      setErrorMessage(errorMsg.replace("Error is : ", ""));
+      console.error("Auth error:", err.message);
     }
-    catch (err) {
-      setErrorMessage(err?.response?.data || "Something Went Wrong!!");
-      console.log("Error from submitting login data : " + err.message);
-    }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
@@ -115,7 +147,16 @@ const Login = () => {
                     ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm'
                     : 'text-slate-600 hover:text-slate-800'
                     }`}
-                  onClick={() => setIsLogin(true)}
+                  onClick={() => {
+                    setIsLogin(true);
+                    setFormData({
+                      name: '',
+                      email: 'ofctarun@gmail.com',
+                      password: 'Ofctarun@123',
+                      agreed: false
+                    })
+                  }
+                  }
                 >
                   Login
                 </button>
@@ -124,7 +165,16 @@ const Login = () => {
                     ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm'
                     : 'text-slate-600 hover:text-slate-800'
                     }`}
-                  onClick={() => setIsLogin(false)}
+                 
+                   onClick={() => {
+                    setIsLogin(false);
+                    setFormData({
+                      name: '',
+                      email: '',
+                      password: '',
+                      agreed: false
+                    })
+                  }}
                 >
                   Sign Up
                 </button>

@@ -1,5 +1,5 @@
 import express from "express";
-import {isValid} from "../utils/validation.js";
+import { isValid } from "../utils/validation.js";
 import bcrypt from "bcrypt";
 import User from "../models/user.js";
 
@@ -9,7 +9,7 @@ authRouter.post("/signup", async (req, res) => {
     try {
         isValid(req);
 
-        const { firstName, email, password ,photoURL} = req.body;
+        const { firstName, email, password, photoURL } = req.body;
         //hash
         //const hashedPassword = await bcrypt.hash(password, 10); --> USING PRE MIDDLE WARE!!
 
@@ -20,9 +20,15 @@ authRouter.post("/signup", async (req, res) => {
             photoURL
         });
 
-        await user.save();
+        const savedUser = await user.save();
+        const token = await savedUser.getJWT();
+        // console.log(token);
 
-        res.status(200).send("Created User Successfully!!!");
+        //create a cookie with jwt
+        res.cookie("token", token, {
+            expires: new Date(Date.now() + 8 * 3600000)
+        });
+        res.status(200).send({ message: "Created User Successfully!!!", data: savedUser });
     }
     catch (error) {
         res.status(400).send("Error is : " + error);
@@ -66,7 +72,7 @@ authRouter.post("/logout", async (req, res) => {
     res.cookie("token", null, {
         expires: new Date(Date.now()),
     })
-    .send("Logout Successfull!!");
+        .send("Logout Successfull!!");
 })
 
 export default authRouter;

@@ -1,6 +1,28 @@
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { removeItemFromFeed } from "../utils/feedSlice";
+
 const UserCard = ({user}) => {
-  const {firstName, lastName, email, photoURL, bio, age, gender, skills} = user;
+  const {_id, firstName, lastName, email, photoURL, bio, age, gender, skills} = user;
+
+  const feed = useSelector((store) => store.feed);
+  const dispatch = useDispatch();
+
   
+  const handleRequest = async (requestType , userId ) => {
+    try{
+      const res = await axios.post(BASE_URL+"/request/send/" + requestType+"/"+userId , {} , {withCredentials : true});
+      console.log("data sent as : "+ requestType + " " + userId);
+      console.log("result from axios : ",res);
+      dispatch(removeItemFromFeed(userId));
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+
   return (
     <div className="card bg-base-100 w-full max-w-sm shadow-xl border border-base-300 hover:shadow-2xl transition-shadow">
       {/* Profile Image */}
@@ -67,13 +89,13 @@ const UserCard = ({user}) => {
         
         {/* Action Buttons */}
         <div className="card-actions w-full gap-2">
-          <button className="btn btn-outline btn-error flex-1">
+          <button className="btn btn-outline btn-error flex-1" onClick={() => handleRequest("ignored",_id)}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
             Ignore
           </button>
-          <button className="btn btn-primary flex-1">
+          <button className="btn btn-primary flex-1" onClick={() => handleRequest("interested",_id)}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
             </svg>
