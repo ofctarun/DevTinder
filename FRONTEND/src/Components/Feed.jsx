@@ -13,24 +13,37 @@ const Feed = () => {
     try {
       const res = await axios.get(BASE_URL + "/feed", {
         withCredentials: true,
-      })
-      // console.log("Feed data : ", res.data);
-      dispatch(addFeed(res?.data));
-    }
-    catch (err) {
+      });
+      
+      dispatch(addFeed(res?.data?.data || res?.data)); 
+    } catch (err) {
       console.log("Error from getting feed : " + err);
     }
   }
 
   useEffect(() => {
-    if(!feed) getFeed();
+    if (!feed) getFeed();
   }, []);
 
+  if (!feed) return (
+    <div className="flex justify-center my-20">
+      <span className="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+  );
+
+  if (feed.length === 0) return (
+    <div className="flex flex-col items-center justify-center my-20 text-center">
+      <div className="text-6xl mb-4">🙌</div>
+      <h2 className="text-2xl font-bold">No more profiles to show!</h2>
+      <p className="text-base-content/60">Check back later for new developers.</p>
+    </div>
+  );
+
   return (
-    feed && (<div className='flex justify-center my-10'>
+    <div className='flex justify-center my-10'>
       <UserCard user={feed[0]}/>
-    </div>)
-  )
+    </div>
+  );
 }
 
 export default Feed
