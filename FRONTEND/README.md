@@ -69,7 +69,25 @@ Body
         - restart nginx - sudo systemctl restart nginx
         - Modify the BASEURL in frontend project to "/api"
 
+# Case 1: Frontend update (React / Vite)
 
+    -If you changed frontend code:
+
+        -cd ~/DevTinder/FRONTEND
+        -npm install          # only if package.json changed
+        -npm run build
+        -sudo cp -r dist/* /var/www/html/
+        -sudo systemctl restart nginx
+        That’s it.
+
+# Case 2: Backend update (Node / Express)
+
+    -If backend code changed:
+
+        -cd ~/DevTinder/BACKEND
+        -npm install          # only if dependencies changed
+        -pm2 restart all
+        (You should be using PM2 for backend.)
 
 # Ngxinx config: 
 

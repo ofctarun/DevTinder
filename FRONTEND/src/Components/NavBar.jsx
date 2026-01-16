@@ -37,9 +37,9 @@ const NavBar = () => {
         {/* THEME TOGGLE START */}
         <label className="swap swap-rotate mr-2">
           {/* this hidden checkbox controls the state */}
-          <input 
-            type="checkbox" 
-            className="theme-controller" 
+          <input
+            type="checkbox"
+            className="theme-controller"
             value="dark" // Sets the theme to 'dark' when checked
           />
 
