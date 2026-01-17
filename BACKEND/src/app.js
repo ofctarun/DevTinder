@@ -6,6 +6,8 @@ import profileRouter from "./routes/profile.js";
 import requestRouter from "./routes/request.js";
 import userRouter from "./routes/user.js";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config()
 
 const app = express();
 app.use(cors({
@@ -25,7 +27,7 @@ const startServer = async() => {
     try{
         await connectDB();
         console.log("Database connection Established")
-        app.listen(1818 , () => {
+        app.listen(process.env.PORT , () => {
             console.log("Server running on port 1818")
         } )
     }

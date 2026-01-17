@@ -89,7 +89,54 @@ Body
         -pm2 restart all
         (You should be using PM2 for backend.)
 
-# Ngxinx config: 
+# Nginx config: 
 
         Frontend = http://54.66.56.123/
         Backend = http://54.66.56.123:1818/
+
+        Domain name = devtinder.com => 43.204.96.49
+
+        Frontend = devtinder.com
+        Backend = devtinder.com:7777 => devtinder.com/api
+
+        nginx config : 
+
+        server_name 43.204.96.49;
+
+        location /api/ {
+            proxy_pass http://localhost:7777/;  # Pass the request to the Node.js app
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+
+
+# Addding a custom Domain name
+
+    - purchased domain name from godaddy
+    - signup on cloudflare & add a new domain name
+    - change the nameservers on godaddy and point it to cloudflare
+    - wait for sometime till your nameservers are updated ~15 minutes
+    - DNS record: A devtinder.in 43.204.96.49
+    - Enable SSL for website 
+
+
+# Sending Emails via SES
+
+    - Create a IAM user
+    - Give Access to AmazonSESFullAccess
+    - Amazon SES: Create an Identity
+    - Verify your domain name
+    - Verify an email address identity
+    - Install AWS SDK - v3
+    - Code Example https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/javascriptv3/example_code/ses#code-examples
+    - Setup SesClient
+    - Access Credentials should be created in IAm under SecurityCredentials Tab
+    - Add the credentials to the env file
+    - Write code for SESClient
+    - Write code for Sending email address
+    - Make the email dynamic by passing more params to the run function
+
+
