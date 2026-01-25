@@ -48,7 +48,7 @@ authRouter.post("/login", async (req, res) => {
         const isValidUser = await dbUser.validatePassword(password);
 
         if (isValidUser) {
-            //JWT token 
+            //JWT token
             const token = await dbUser.getJWT();
             // console.log(token);
 

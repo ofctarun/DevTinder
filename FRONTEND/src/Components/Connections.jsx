@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { addConnections } from "../utils/connectionsSlice";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 
 const Connections = () => {
@@ -12,7 +13,7 @@ const Connections = () => {
   const connections = useSelector((store) => store.connections.connections);
 
   useEffect(() => {
-    if(connections.length===0)fetchConnections();
+    if (connections.length === 0) fetchConnections();
   }, []);
 
   const fetchConnections = async () => {
@@ -23,7 +24,7 @@ const Connections = () => {
       dispatch(addConnections(response.data.data));
     } catch (error) {
       console.error("Error fetching connections:", error);
-    }   
+    }
   };
 
   // Add a check to ensure 'connections' is an array before calling .map
@@ -41,7 +42,7 @@ const Connections = () => {
       <h1 className="text-3xl font-black mb-8 text-center">Your Connections</h1>
       <div className="space-y-4">
         {connections.map((item) => {
-          const { _id, firstName, lastName, photoURL, age, gender,bio } = item;
+          const { _id, firstName, lastName, photoURL, age, gender, bio } = item;
           return (
             <div
               key={_id}
@@ -59,9 +60,16 @@ const Connections = () => {
                   {firstName} {lastName}
                 </h2>
                 <div className="flex gap-2 text-sm opacity-70">
-                   <span>{age} years</span> • <span>{gender}</span>
+                  <span>{age} years</span> • <span>{gender}</span>
                 </div>
                 <p className="text-sm italic line-clamp-1">{bio || "No bio provided"}</p>
+              </div>
+              <div className="flex items-center pr-4">
+                <Link to={"/chat/"+_id}>
+                  <button className="btn btn-sm btn-primary rounded-full px-5">
+                    Message
+                  </button>
+                </Link>
               </div>
             </div>
           );

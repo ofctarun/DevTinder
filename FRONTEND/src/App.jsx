@@ -9,6 +9,7 @@ import appStore from './utils/appStore';
 import EditProfile from './Components/EditProfile';
 import Connections from './Components/Connections';
 import Requests from './Components/Requests';
+import Chat from './Components/Chat';
 
 function App() {
 
@@ -44,6 +45,10 @@ function App() {
         {
           path: '/requests',
           element: <Requests />
+        },
+        {
+          path: '/chat/:targetUserId',
+          element: <Chat /> 
         }
       ]
     }
