@@ -152,3 +152,14 @@ Body
     - Amazon SES Bulk Emails
     - Make sendEmail function dynamic
     - bee-queue & bull npm packages
+
+
+# Real Time Chat using Websocket(Socket.io)
+
+    - Build the UI for a chat window on /chat/:targetUserId
+    - Setup socket.io in backend
+    - npm i socket.io
+    - Setup frontend socket.io-client
+    - Initialize the chat
+    - createSocketConnection
+    - Listen to events
