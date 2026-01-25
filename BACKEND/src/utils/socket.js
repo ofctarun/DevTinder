@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import crypto from "crypto";
+import { Chat } from "../models/chat.js";
 
 const getSecretRoomId = (userId, targetUserId) => {
   if (!userId || !targetUserId) return null;
@@ -24,15 +25,37 @@ const initializeSocket = (server) => {
     });
 
     // 2. Message Logic: Backend generates hash to route the message
-    socket.on("sendMessage", ({ userId, targetUserId, firstName, lastName, text }) => {
-      const roomId = getSecretRoomId(userId, targetUserId);
-      
-      io.to(roomId).emit("messageReceived", { 
-        firstName, 
-        lastName, 
-        text 
-      });
-    });
+    socket.on("sendMessage",
+      async ({ userId, targetUserId, firstName, lastName, text }) => {
+        try {
+          const roomId = getSecretRoomId(userId, targetUserId);
+          console.log(firstName + " " + text);
+
+          // TODO: Check if userId & targetUserId are friends
+
+          let chat = await Chat.findOne({
+            participants: { $all: [userId, targetUserId] },
+          });
+
+          if (!chat) {
+            chat = new Chat({
+              participants: [userId, targetUserId],
+              messages: [],
+            });
+          }
+
+          chat.messages.push({
+            senderId: userId,
+            text,
+          });
+
+          await chat.save();
+          io.to(roomId).emit("messageReceived", { firstName, lastName, text });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    );
 
     socket.on("disconnect", () => {
       console.log("Client disconnected:", socket.id);
