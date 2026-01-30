@@ -26,7 +26,10 @@ authRouter.post("/signup", async (req, res) => {
 
         //create a cookie with jwt
         res.cookie("token", token, {
-            expires: new Date(Date.now() + 8 * 3600000)
+            expires: new Date(Date.now() + 8 * 3600000),
+            httpOnly: true,
+            secure: true,      // Must be true for HTTPS (Render)
+            sameSite: "none",  // Required for cross-domain cookies
         });
         res.status(200).send({ message: "Created User Successfully!!!", data: savedUser });
     }
@@ -54,7 +57,10 @@ authRouter.post("/login", async (req, res) => {
 
             //create a cookie with jwt
             res.cookie("token", token, {
-                expires: new Date(Date.now() + 8 * 3600000)
+                expires: new Date(Date.now() + 8 * 3600000),
+                httpOnly: true,
+                secure: true,      // Must be true for HTTPS (Render)
+                sameSite: "none",  // Required for cross-domain cookies
             });
             res.send(dbUser);
         }
@@ -69,10 +75,13 @@ authRouter.post("/login", async (req, res) => {
 })
 
 authRouter.post("/logout", async (req, res) => {
-    res.cookie("token", null, {
-        expires: new Date(Date.now()),
-    })
-        .send("Logout Successfull!!");
+    res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+        httpOnly: true,
+        secure: true,      // Must be true for HTTPS (Render)
+        sameSite: "none",  // Required for cross-domain cookies
+    });
+        res.send("Logout Successfull!!");
 })
 
 export default authRouter;
