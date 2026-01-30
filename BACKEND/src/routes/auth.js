@@ -80,8 +80,8 @@ authRouter.post("/logout", async (req, res) => {
         httpOnly: true,
         secure: true,      // Must be true for HTTPS (Render)
         sameSite: "none",  // Required for cross-domain cookies
-    });
-        res.send("Logout Successfull!!");
+    })
+        .send("Logout Successfull!!");
 })
 
 export default authRouter;
