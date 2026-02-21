@@ -11,8 +11,7 @@ const getSecretRoomId = (userId, targetUserId) => {
 const initializeSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      // Added production URL to allowed origins
-      origin: ["http://localhost:5173", "https://devtinderrr.vercel.app"],
+      origin: "http://localhost:5173",
       credentials: true,
     },
   });
@@ -51,7 +50,6 @@ const initializeSocket = (server) => {
           });
 
           await chat.save();
-          // Broadcast message to the specific room
           io.to(roomId).emit("messageReceived", { firstName, lastName, text });
         } catch (err) {
           console.log(err);
