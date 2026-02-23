@@ -12,9 +12,18 @@ const Chat = () => {
 
   // Use a ref to keep the same socket instance across renders
   const socketRef = useRef(null);
+  const scrollRef = useRef(null);
 
   const user = useSelector((store) => store.user);
   const userId = user?._id;
+
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const fetchChatMessages = async () => {
     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
@@ -86,22 +95,21 @@ const Chat = () => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`chat ${
-              msg.senderId === userId ? "chat-end" : "chat-start"
-            }`}
+            className={`chat ${msg.senderId === userId ? "chat-end" : "chat-start"
+              }`}
           >
             <div className="chat-header">
               {msg.firstName} {msg.lastName}
             </div>
             <div
-              className={`chat-bubble ${
-                msg.senderId === userId ? "chat-bubble-primary" : ""
-              }`}
+              className={`chat-bubble ${msg.senderId === userId ? "chat-bubble-primary" : ""
+                }`}
             >
               {msg.text}
             </div>
           </div>
         ))}
+        <div ref={scrollRef}></div>
       </div>
 
       <div className="p-5 border-t border-gray-600 flex items-center gap-2">
